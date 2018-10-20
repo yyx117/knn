@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 
 public class WordCount {
-	//é™æ€å†…éƒ¨ç±»
+	//¾²Ì¬ÄÚ²¿Àà
 	public static class WCMapper extends
 		Mapper<LongWritable,Text,Text,IntWritable>{
 		
@@ -24,7 +24,7 @@ public class WordCount {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, IntWritable>.Context context) throws IOException, InterruptedException
 				  {
 			
-			//ç”¨ç©ºæ ¼æ‹†åˆ†ä¸€è¡Œå†…å®¹ï¼Œæ‹†åˆ†å‡ºæ¥æ¯ä¸ªå°æ®µå°±æ˜¯ä¸€ä¸ªå•è¯
+			//ÓÃ¿Õ¸ñ²ğ·ÖÒ»ĞĞÄÚÈİ£¬²ğ·Ö³öÀ´Ã¿¸öĞ¡¶Î¾ÍÊÇÒ»¸öµ¥´Ê
 			String line = value.toString();
 			String[] ss = line.split(" ");
 			for (String s : ss) {
@@ -39,9 +39,9 @@ public class WordCount {
 		protected void reduce(Text key, Iterable<IntWritable> values,
 				Reducer<Text, IntWritable, Text, IntWritable>.Context context) throws IOException, InterruptedException  {
 			
-			//ç»è¿‡shuffleä»¥åï¼Œmapè¾“å‡ºkeyç›¸åŒçš„é”®å€¼å¯¹ä¼šè¾“å‡ºåˆ°åŒä¸€ä¸ªreduceæ–¹æ³•ä¸­
-			//è¾“å…¥æ•°æ®åªä¿ç•™äº†ä¸€ä¸ªkeyï¼ŒæŠŠvalueå½¢æˆä¸€ä¸ªé›†åˆ
-			//keyå°±æ˜¯æŸä¸€ä¸ªå•è¯ï¼Œvalueså°±æ˜¯ä¸€å †1,åªéœ€è¦å¯¹valueséå†
+			//¾­¹ıshuffleÒÔºó£¬mapÊä³ökeyÏàÍ¬µÄ¼üÖµ¶Ô»áÊä³öµ½Í¬Ò»¸öreduce·½·¨ÖĞ
+			//ÊäÈëÊı¾İÖ»±£ÁôÁËÒ»¸ökey£¬°ÑvalueĞÎ³ÉÒ»¸ö¼¯ºÏ
+			//key¾ÍÊÇÄ³Ò»¸öµ¥´Ê£¬values¾ÍÊÇÒ»¶Ñ1,Ö»ĞèÒª¶Ôvalues±éÀú
 			int sum=0;
 			for (IntWritable value : values) {
 				sum += value.get();				
@@ -49,27 +49,27 @@ public class WordCount {
 			context.write(key, new IntWritable(sum));
 		}
 		}
-	//é…ç½®ä»»åŠ¡
+	//ÅäÖÃÈÎÎñ
 	public static void main(String[] args) throws Exception  {
-		//1 è·å¾—é…ç½®å¯¹è±¡
+		//1 »ñµÃÅäÖÃ¶ÔÏó
 			Configuration conf = new Configuration();
-		//2 è·å¾—ä»»åŠ¡å¯¹è±¡
+		//2 »ñµÃÈÎÎñ¶ÔÏó
 			Job job = Job.getInstance(conf,"wordcount");
 			job.setJarByClass(WordCount.class);
-		//3  ä¸ºä»»åŠ¡è£…é…mapperç±»
+		//3  ÎªÈÎÎñ×°ÅämapperÀà
 			job.setMapperClass(WCMapper.class);
 			job.setMapOutputKeyClass(Text.class);
 			job.setMapOutputValueClass(IntWritable.class);
-		//4 ä¸ºä»»åŠ¡è£…é…reducerç±»
+		//4 ÎªÈÎÎñ×°ÅäreducerÀà
 			job.setReducerClass(WCReaducer.class);
 			job.setOutputKeyClass(Text.class);
 			job.setOutputValueClass(IntWritable.class);
 			
-		//5  é…ç½®æ•°æ®è¾“å…¥è·¯å¾„
+		//5  ÅäÖÃÊı¾İÊäÈëÂ·¾¶
 			TextInputFormat.addInputPath(job, new Path("src/test.txt"));
-		//6  é…ç½®ç»“æœè¾“å‡ºè·¯å¾„
+		//6  ÅäÖÃ½á¹ûÊä³öÂ·¾¶
 			TextOutputFormat.setOutputPath(job, new Path("src/count_result"));		
-		//7 æäº¤ä»»åŠ¡
+		//7 Ìá½»ÈÎÎñ
 			job.waitForCompletion(true);
 	}
 }

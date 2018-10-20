@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: yyx
-Build-Jdk: 1.8.0_111
+Build-Jdk: 1.7.0_71
+Built-By: 94360
 Created-By: Maven Integration for Eclipse
 
